@@ -31,6 +31,11 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
         mBrushSize = 15.toFloat()
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        mCanvasbitmap = Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888)
+        canvas = Canvas(mCanvasbitmap!!)
+    }
 
     internal inner class CustomPath(var color: Int, var brushThickness: Float) : Path() {
 
