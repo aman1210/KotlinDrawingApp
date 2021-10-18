@@ -1,13 +1,18 @@
 package com.example.kidsdrawingapp
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -38,12 +43,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.ibGallery.setOnClickListener {
             if(isReadStorageAllowed()){
-
+                loadImage.launch("image/*")
             }else{
                 requestStoragePermission()
             }
         }
     }
+
+    val loadImage = registerForActivityResult(ActivityResultContracts.GetContent(),
+        ActivityResultCallback {
+            binding.ivBackground.setImageURI(it)
+        })
 
     private fun showBrushSizeChooserDialog() {
         brushBinding = DialogBrushSizeBinding.inflate(layoutInflater)
@@ -124,5 +134,6 @@ class MainActivity : AppCompatActivity() {
 
         companion object {
             private const val STORAGE_PERMISSION_CODE = 1
+            private const val GALLARY =2
         }
 }
