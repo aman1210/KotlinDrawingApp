@@ -23,8 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="background image"
-            android:scaleType="centerCrop"
-            android:src="@drawable/image" />
+            android:scaleType="centerCrop" />
 
         <com.example.kidsdrawingapp.DrawingView
             android:id="@+id/drawing_view"
@@ -147,6 +146,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
+
         <ImageButton
             android:id="@+id/ib_gallery"
             android:layout_width="50dp"
@@ -155,6 +155,15 @@
             android:contentDescription="gallery image"
             android:scaleType="fitXY"
             android:src="@drawable/ic_gallery" />
+
+        <ImageButton
+            android:id="@+id/ib_undo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:contentDescription="undo image"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_undo" />
 
         <ImageButton
             android:id="@+id/ib_brush"
