@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity() {
                 requestStoragePermission()
             }
         }
+
+        binding.ibUndo.setOnClickListener {
+            binding.drawingView.undoLast()
+        }
     }
 
     val loadImage = registerForActivityResult(ActivityResultContracts.GetContent(),
