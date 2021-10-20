@@ -5,6 +5,9 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -42,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.ibGallery.setOnClickListener {
-            if(isReadStorageAllowed()){
+            if (isReadStorageAllowed()) {
                 loadImage.launch("image/*")
-            }else{
+            } else {
                 requestStoragePermission()
             }
         }
@@ -109,10 +112,16 @@ class MainActivity : AppCompatActivity() {
                 ).toString()
             )
         ) {
-            Toast.makeText(this,"Need permission to add a background",Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Need permission to add a background", Toast.LENGTH_LONG).show()
         }
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            STORAGE_PERMISSION_CODE)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ),
+            STORAGE_PERMISSION_CODE
+        )
     }
 
     override fun onRequestPermissionsResult(
@@ -121,23 +130,38 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == STORAGE_PERMISSION_CODE){
-            if(grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this@MainActivity,"Permission granted",Toast.LENGTH_LONG).show()
-            }else{
-                Toast.makeText(this@MainActivity,"Permission denied",Toast.LENGTH_LONG).show()
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this@MainActivity, "Permission granted", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this@MainActivity, "Permission denied", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun isReadStorageAllowed():Boolean{
-        val result = ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)
+    private fun isReadStorageAllowed(): Boolean {
+        val result =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
         return result == PackageManager.PERMISSION_GRANTED
     }
 
 
-        companion object {
-            private const val STORAGE_PERMISSION_CODE = 1
-            private const val GALLARY =2
+    private fun getBitmapFromView(view: View): Bitmap {
+        val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888);
+        val canvas = Canvas(returnedBitmap)
+        val bgDrawable = view.background
+        if(bgDrawable!=null){
+            bgDrawable.draw(canvas)
+        }else{
+            canvas.drawColor(Color.WHITE)
         }
+
+        view.draw(canvas)
+        return returnedBitmap;
+    }
+
+    companion object {
+        private const val STORAGE_PERMISSION_CODE = 1
+        private const val GALLARY = 2
+    }
 }
