@@ -24,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.loader.content.AsyncTaskLoader
 import com.example.kidsdrawingapp.databinding.ActivityMainBinding
 import com.example.kidsdrawingapp.databinding.DialogBrushSizeBinding
+import com.example.kidsdrawingapp.databinding.DialogCustomProgressBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,8 +35,10 @@ import java.io.FileOutputStream
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var brushBinding: DialogBrushSizeBinding
+    private  lateinit var dialogCustomProgressBinding: DialogCustomProgressBinding
 
     private var mImageButtonCurrentPaint: ImageButton? = null
+    var customProgressDialog:Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +70,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.ibSave.setOnClickListener {
             if(isReadStorageAllowed()){
+                showProgressDialog()
                 lifecycleScope.launch{
                     val flDrawingView:FrameLayout = binding.flDrawingViewContainer
                     saveBitmapFile(getBitmapFromView(flDrawingView))
@@ -202,6 +206,7 @@ class MainActivity : AppCompatActivity() {
 
                     result = F.absolutePath;
                     runOnUiThread {
+                        cancelProgressDialog()
                         if (result != "") {
                             Toast.makeText(
                                 this@MainActivity,
@@ -223,6 +228,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    private fun showProgressDialog(){
+        dialogCustomProgressBinding = DialogCustomProgressBinding.inflate(layoutInflater)
+        customProgressDialog = Dialog(this@MainActivity)
+
+
+        customProgressDialog?.setContentView(dialogCustomProgressBinding.root)
+
+        customProgressDialog?.show()
+    }
+
+    private fun cancelProgressDialog(){
+        if(customProgressDialog!=null){
+            customProgressDialog?.dismiss()
+            customProgressDialog=null
+        }
     }
 
     companion object {
